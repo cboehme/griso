@@ -25,8 +25,8 @@ import java.util.LinkedList;
  * graph.
  * 
  * @param <N> Type of edge or vertex name
- * 
- * @author christoph
+ *
+ * @author Christoph Böhme
  */
 final class Node<N> {
 	
@@ -51,7 +51,11 @@ final class Node<N> {
 		this.name = name;
 		this.nodeId = nodeId;
 	}
-	
+
+	public boolean hasName() {
+		return name != null;
+	}
+
 	public N getName() {
 		return name;
 	}
@@ -68,6 +72,16 @@ final class Node<N> {
 		return Collections.unmodifiableCollection(connectedFrom);
 	}
 
+	public boolean isEquivalent(final Node<?> other) {
+		if (type != other.type) {
+			return false;
+		}
+		if (name == null) {
+			return other.name == null;
+		}
+		return name.equals(other.name);
+	}
+
 	/**
 	 * Connects this node to another node.
 	 * 
@@ -82,17 +96,25 @@ final class Node<N> {
 
 	@Override
 	public String toString() {
-		final String prefix;
+		final StringBuilder builder = new StringBuilder();
 		if (type == Type.VERTEX) {
-			prefix = "V";
+			builder.append('V');
 		} else {
-			prefix = "E";
+			builder.append('E');
 		}
+		builder.append(':');
 		if (nodeId == null) {
-			return prefix + ":__no_id/" + name.toString();
+			builder.append("__no_id");
 		} else {
-			return prefix + ":" + nodeId.toString() + "/" + name.toString();
+			builder.append(nodeId.toString());
 		}
+		builder.append('/');
+		if (name == null) {
+			builder.append("null");
+		} else {
+			builder.append(name.toString());
+		}
+		return builder.toString();
 	}
-	
+
 }

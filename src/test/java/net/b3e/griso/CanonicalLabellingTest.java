@@ -208,7 +208,18 @@ public final class CanonicalLabellingTest {
 		// graph defined this test case.
 		verifyLabellings(graph, labeller, 10);
 	}
-	
+
+	@Test
+	public void shouldAllowNullAsNodeName() {
+		graph.addVertex("1", null);
+		graph.addVertex("2", NAME1);
+		graph.addDirectedEdge("1", "2", null);
+
+		final GraphLabeller labeller = new GraphLabeller(graph);
+
+		verifyLabellings(graph, labeller, 1);
+	}
+
 	private static void verifyLabellings(final Graph<?, ?, ?> graph,
 			final GraphLabeller labeller, final int variants) {
 		

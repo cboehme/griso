@@ -54,8 +54,18 @@ public final class Graph<I, V, E> {
 	}
 	
 	/**
-	 * Adds a vertex to the graph.
-	 * 
+	 * Adds an unnamed vertex to the graph.
+	 *
+	 * @param vertexId unique identifier for addressing the vertex
+	 * @throws IllegalArgumentException if {@code id} exists already
+	 */
+	public void addVertex(final I vertexId) {
+		addVertex(vertexId, null);
+	}
+
+	/**
+	 * Adds a named vertex to the graph.
+	 *
 	 * @param vertexId unique identifier for addressing the vertex
 	 * @param vertexName of the vertex
 	 * @throws IllegalArgumentException if {@code id} exists already
@@ -196,9 +206,8 @@ public final class Graph<I, V, E> {
 		for (final Label thisLabel : thisLabelling.values()) {
 			final Node<?> thisNode = thisLabelling.inverse().get(thisLabel);
 			final Node<?> otherNode = otherLabelling.inverse().get(thisLabel);
-			
-			if (!thisNode.getName().equals(otherNode.getName())
-					|| thisNode.getType() != otherNode.getType()) {
+
+			if (!thisNode.isEquivalent(otherNode)) {
 				return false;
 			}
 			

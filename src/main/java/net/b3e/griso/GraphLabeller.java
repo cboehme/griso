@@ -116,7 +116,7 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 	
 	private void assignNodesToLabelGroups() {
 		for (final Node<?> node : nodes) {
-			final Label classId = labelFactory.create(node.getName().hashCode());
+			final Label classId = labelFactory.create(getNodeHashCode(node));
 			labelGroups.put(classId, node);
 		}
 	}
@@ -153,7 +153,7 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 	}
 	
 	private Label computeLabel(final Node<?> node) {
-		int value = node.getName().hashCode();
+		int value = getNodeHashCode(node);
 		for (final Node<?> connectedNode : node.getConnectedTo()) {
 			value += CONNECTION_TO * labelling.get(connectedNode).hashCode();
 		}
@@ -194,5 +194,12 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 		// a few nodes:
 		return nodes.size() -1 ;
 	}
-	
+
+	private static int getNodeHashCode(final Node<?> node) {
+		if (node.hasName()) {
+			return node.getName().hashCode();
+		}
+		return 0;
+	}
+
 }

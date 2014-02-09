@@ -306,7 +306,35 @@ public final class GraphTest {
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
+	@Test
+	public void shouldAllowNullAsVertexName() {
+		graph1.addVertex("1", NAME1);
+		graph1.addVertex("2", null);
+		graph1.addDirectedEdge("1", "2", NAME2);
+
+		graph2.addVertex("1", NAME1);
+		graph2.addVertex("2", null);
+		graph2.addDirectedEdge("1", "2", NAME2);
+
+		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
+		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
+	}
+
+	@Test
+	public void shouldAllowNullAsEdgeName() {
+		graph1.addVertex("1", NAME1);
+		graph1.addVertex("2", NAME2);
+		graph1.addDirectedEdge("1", "2", null);
+
+		graph2.addVertex("1", NAME1);
+		graph2.addVertex("2", NAME2);
+		graph2.addDirectedEdge("1", "2", null);
+
+		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
+		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
+	}
+
 	private static void createAmbiguouslyNamedGraph(final Graph<String, String, String> graph) {
 		graph.addVertex("1", NAME1);
 		graph.addVertex("2", NAME1);
