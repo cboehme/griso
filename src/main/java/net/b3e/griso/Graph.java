@@ -45,6 +45,10 @@ public final class Graph<I, V, E> {
 	private final Map<I, Node<V>> vertices = new HashMap<>();
 	private final Set<Node<?>> nodes = new HashSet<>();
 	
+	public boolean hasVertex(final I vertexId) {
+		return vertices.containsKey(vertexId);
+	}
+
 	public Set<Node<?>> getNodes() {
 		return Collections.unmodifiableSet(nodes);
 	}
