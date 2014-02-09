@@ -21,7 +21,7 @@ import org.junit.Test;
 
 /**
  * Tests for class {@link Label}.
- * 
+ *
  * @author Christoph Böhme
  *
  */

@@ -17,12 +17,12 @@ package net.b3e.griso;
 
 /**
  * A label
- * 
+ *
  * @author Christoph Böhme
  *
  */
 final class Label {
-	
+
 	private final Type type;
 	private final int value;
 
@@ -30,19 +30,19 @@ final class Label {
 	 * Creates new labels.
 	 */
 	public static final class Factory {
-	
+
 		private int generatedValue = 1;
-		
+
 		/**
 		 * Creates a label from a user-provided value.
-		 * 
+		 *
 		 * @param userValue of the class id
 		 * @return a new label
 		 */
 		public Label create(final int userValue) {
 			return new Label(Type.FIXED, userValue);
 		}
-		
+
 		/**
 		 * Creates a new label with a generated value.
 		 * @return a new label
@@ -51,19 +51,19 @@ final class Label {
 			generatedValue += 1;
 			return new Label(Type.GENERATED, generatedValue);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Type of the label.
 	 */
 	private enum Type { FIXED, GENERATED }
-	
+
 	protected Label(final Type type, final int value) {
 		this.type = type;
 		this.value = value;
 	}
-	
+
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
@@ -84,7 +84,7 @@ final class Label {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -95,10 +95,10 @@ final class Label {
 		result = prime * result + value;
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		return Integer.toString(value) + "(" + type.toString() + ")";
 	}
-	
+
 }

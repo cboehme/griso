@@ -23,17 +23,17 @@ import java.util.LinkedList;
  * A node of the internal graph representation. It may
  * represent a vertex or a named edge of the user's
  * graph.
- * 
+ *
  * @param <N> Type of edge or vertex name
  *
  * @author Christoph Böhme
  */
 final class Node<N> {
-	
+
 	private final Type type;
 	private final N name;
 	private final Object nodeId;
-	
+
 	private final Collection<Node<?>> connectedTo = new LinkedList<>();
 	private final Collection<Node<?>> connectedFrom = new LinkedList<>();
 
@@ -41,11 +41,11 @@ final class Node<N> {
 	 * Type of node
 	 */
 	enum Type { VERTEX, EDGE };
-	
+
 	public Node(final Type type, final N name) {
 		this(type, name, null);
 	}
-	
+
 	public <I> Node(final Type type, final N name, final I nodeId) {
 		this.type = type;
 		this.name = name;
@@ -63,7 +63,7 @@ final class Node<N> {
 	public Type getType() {
 		return type;
 	}
-	
+
 	public Collection<Node<?>> getConnectedTo() {
 		return Collections.unmodifiableCollection(connectedTo);
 	}
@@ -84,7 +84,7 @@ final class Node<N> {
 
 	/**
 	 * Connects this node to another node.
-	 * 
+	 *
 	 * @param toNode the node to which this node is connected
 	 * @return toNode to enable method chaining.
 	 */

@@ -23,7 +23,7 @@ import org.junit.Test;
 
 /**
  * Tests for class {@link Graph}.
- * 
+ *
  * @author Christoph Böhme
  *
  */
@@ -31,7 +31,7 @@ public final class GraphTest {
 
 	private static final String ISOMORPHISM_EXPECTED = "Graphs should be isomorph";
 	private static final String NO_ISOMORPHISM_EXPECTED = "Graphs should not be isomorph";
-	
+
 	private static final String NAME1 = "L1";
 	private static final String NAME2 = "L2";
 	private static final String NAME3 = "L3";
@@ -40,40 +40,40 @@ public final class GraphTest {
 
 	private  Graph<String, String, String> graph1;
 	private  Graph<String, String, String> graph2;
-	
+
 	@Before
 	public void setup() {
 		graph1 = new Graph<>();
 		graph2 = new Graph<>();
 	}
-	
+
 	@Test
 	public void shouldClassifyAGraphIsomorphToItself() {
 		assertTrue("A graph should be isomorph to itself", graph1.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldClassifyNullAsNotEvenIsomorphToAnEmptyGraph() {
 		assertFalse("A graph should not be isomorph to null", graph1.isIsomorphism(null));
 	}
-	
+
 	@Test
 	public void shouldClassifyEmptyGraphsAsIsomorph() {
 		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldClassifyAnEmptyGraphAsNotIsomorphToANoneEmptyGraph() {
 		graph1.addVertex("1", NAME1);
 		graph1.addVertex("2", NAME2);
 		graph1.addDirectedEdge("1", "2");
-		
+
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
-		
+
 	}
-	
+
 	@Test
 	public void shouldClassifyIsomorphUniquelyNamedGraphsCorrectly() {
 		graph1.addVertex("1", NAME1);
@@ -87,11 +87,11 @@ public final class GraphTest {
 		graph2.addVertex("c", NAME3);
 		graph2.addDirectedEdge("a", "b", NAME4);
 		graph2.addDirectedEdge("a", "c", NAME5);
-		
+
 		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldClassifyNoneIsomorphUniquelyNamedGraphsCorrectly() {
 		graph1.addVertex("1", NAME1);
@@ -99,21 +99,21 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME3);
 		graph1.addDirectedEdge("1", "2", NAME4);
 		graph1.addDirectedEdge("1", "3", NAME5);
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME3);
 		graph2.addDirectedEdge("a", "b", NAME4);
 		graph2.addDirectedEdge("b", "c", NAME5);
-		
+
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldClassifyIsomorphAmbiguouslyNamedGraphsCorrectly() {
 		createAmbiguouslyNamedGraph(graph1);
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME1);
 		graph2.addVertex("c", NAME2);
@@ -127,11 +127,11 @@ public final class GraphTest {
 		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldClassifyNoneIsomorphAmbiguouslyNamedGraphsCorrectly() {
 		createAmbiguouslyNamedGraph(graph1);
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME1);
 		graph2.addVertex("c", NAME2);
@@ -153,17 +153,17 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME2);
 		graph1.addDirectedEdge("1", "2", NAME3);
 		graph1.addDirectedEdge("1", "3", NAME3);
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME2);
 		graph2.addDirectedEdge("a", "b", NAME3);
 		graph2.addDirectedEdge("a", "c", NAME3);
-		
+
 		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldClassifyNoneIsomorphGraphsWithMultipleLabellingsCorrectly() {
 		graph1.addVertex("1", NAME1);
@@ -171,13 +171,13 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME2);
 		graph1.addDirectedEdge("1", "2", NAME3);
 		graph1.addDirectedEdge("1", "3", NAME3);
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME2);
 		graph2.addDirectedEdge("b", "a", NAME3);
 		graph2.addDirectedEdge("c", "a", NAME3);
-		
+
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
@@ -189,13 +189,13 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME2);
 		graph1.addUndirectedEdge("1", "2");
 		graph1.addUndirectedEdge("1", "3");
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME2);
 		graph2.addUndirectedEdge("a", "b");
 		graph2.addUndirectedEdge("c", "a");
-		
+
 		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
@@ -207,17 +207,17 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME2);
 		graph1.addUndirectedEdge("1", "2");
 		graph1.addUndirectedEdge("1", "3");
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME2);
 		graph2.addUndirectedEdge("a", "b");
 		graph2.addUndirectedEdge("c", "b");
-		
+
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldClassifyIsomorphGraphsWithUndirectedNamedEdgesCorrectly()  {
 		graph1.addVertex("1", NAME1);
@@ -225,13 +225,13 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME2);
 		graph1.addUndirectedEdge("1", "2", NAME3);
 		graph1.addUndirectedEdge("1", "3", NAME3);
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME2);
 		graph2.addUndirectedEdge("a", "b", NAME3);
 		graph2.addUndirectedEdge("c", "a", NAME3);
-		
+
 		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
@@ -244,13 +244,13 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME2);
 		graph1.addUndirectedEdge("1", "2", NAME3);
 		graph1.addUndirectedEdge("1", "3", NAME3);
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME2);
 		graph2.addUndirectedEdge("a", "b", NAME3);
 		graph2.addUndirectedEdge("c", "b", NAME3);
-		
+
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
@@ -262,17 +262,17 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME3);
 		graph1.addDirectedEdge("1", "2");
 		graph1.addDirectedEdge("1", "3");
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME3);
 		graph2.addDirectedEdge("a", "b");
 		graph2.addDirectedEdge("a", "c");
-		
+
 		assertTrue(ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertTrue(ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldClassifyNoneIsomorphGraphsWithDirectedEdgesCorrectly() {
 		graph1.addVertex("1", NAME1);
@@ -280,29 +280,29 @@ public final class GraphTest {
 		graph1.addVertex("3", NAME3);
 		graph1.addDirectedEdge("1", "2");
 		graph1.addDirectedEdge("1", "3");
-		
+
 		graph2.addVertex("a", NAME1);
 		graph2.addVertex("b", NAME2);
 		graph2.addVertex("c", NAME3);
 		graph2.addDirectedEdge("a", "b");
 		graph2.addDirectedEdge("c", "a");
-		
+
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
-	
+
 	@Test
 	public void shouldDistinguishBetweenEdgesAndVerticesWithTheSameName() {
 		graph1.addVertex("1", NAME1);
 		graph1.addVertex("2", NAME2);
 		graph1.addDirectedEdge("1", "2", NAME3);
-		
+
 		graph2.addVertex("1", NAME1);
 		graph2.addVertex("2", NAME2);
 		graph2.addVertex("3", NAME3);
 		graph2.addDirectedEdge("1", "3");
 		graph2.addDirectedEdge("3", "2");
-		
+
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph1.isIsomorphism(graph2));
 		assertFalse(NO_ISOMORPHISM_EXPECTED, graph2.isIsomorphism(graph1));
 	}
@@ -346,5 +346,5 @@ public final class GraphTest {
 		graph.addDirectedEdge("1", "4", NAME5);
 		graph.addDirectedEdge("2", "5", NAME5);
 	}
-	
+
 }

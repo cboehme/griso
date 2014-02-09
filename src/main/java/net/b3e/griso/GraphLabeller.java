@@ -35,37 +35,37 @@ import com.google.common.collect.Multimap;
  * name or their neighbourhood, the class has to randomly assign
  * a label to a node. Because of this randomisation more than
  * one canonical labelling may exist for a graph.
- * 
+ *
  * @author Christoph Böhme
  *
  */
 public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
-	
+
 	private static final int CONNECTION_TO = 31;
 	private static final int CONNECTION_FROM = 43;
 
 	private static final Node<?> REWIND_MARKER
 			= new Node<String>(Node.Type.VERTEX, "REWIND_MARKER");
-	
+
 	private final Label.Factory labelFactory = new Label.Factory();
-		
+
 	private final Collection<Node<?>> nodes;
 	private final int graphDiameter;
 
 	private final Map<Node<?>, Label> labelling = new HashMap<>();
-	
+
 	private final Deque<Multimap<Label, Node<?>>> labelGroupStack = new LinkedList<>();
 	private final Deque<Node<?>> alternatives = new LinkedList<>();
 
 	private Multimap<Label, Node<?>> labelGroups = HashMultimap.create();
-	
+
 	GraphLabeller(final Graph<?, ?, ?> graph) {
 		nodes = new LinkedList<Node<?>>(graph.getNodes());
 		graphDiameter = estimateGraphDiameter() + 1;
-		
+
 		assignNodesToLabelGroups();
 	}
-	
+
 	@Override
 	public BiMap<Node<?>, Label> next() {
 		if (labelling.isEmpty()) {
@@ -77,16 +77,16 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 		} else {
 			selectNextAlternative();
 		}
-			
+
 		while (!createLabelling()) {
 			collectAlternatives();
 			selectNextAlternative();
 		}
-		
+
 		buildNodeLabelsMap();
 		return HashBiMap.create(labelling);
 	}
-	
+
 	@Override
 	public boolean hasNext() {
 		for (final Node<?> node : alternatives) {
@@ -101,7 +101,7 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	private boolean createLabelling() {
 		for (int i=0; i < graphDiameter; ++i) {
 			collectAmbiguousNodes();
@@ -110,17 +110,17 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 			}
 		}
 		collectAmbiguousNodes();
-		
+
 		return nodes.isEmpty();
 	}
-	
+
 	private void assignNodesToLabelGroups() {
 		for (final Node<?> node : nodes) {
 			final Label classId = labelFactory.create(getNodeHashCode(node));
 			labelGroups.put(classId, node);
 		}
 	}
-	
+
 	private void collectAmbiguousNodes() {
 		nodes.clear();
 		for (final Collection<Node<?>> nodesInClass : labelGroups.asMap().values()) {
@@ -129,7 +129,7 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 			}
 		}
 	}
-	
+
 	private boolean relabelAmbiguousNodes() {
 		buildNodeLabelsMap();
 		boolean modified = false;
@@ -144,14 +144,14 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 		}
 		return modified;
 	}
-	
+
 	private void buildNodeLabelsMap() {
 		labelling.clear();
 		for (final Entry<Label, Node<?>> entry : labelGroups.entries()) {
 			labelling.put(entry.getValue(), entry.getKey());
 		}
 	}
-	
+
 	private Label computeLabel(final Node<?> node) {
 		int value = getNodeHashCode(node);
 		for (final Node<?> connectedNode : node.getConnectedTo()) {
@@ -174,7 +174,7 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 			}
 		}
 	}
-	
+
 	private void selectNextAlternative() {
 		Node<?> node = alternatives.pop();
 		while (node == REWIND_MARKER) {  // NOPMD: references to REWIND_MARKER are used as markers

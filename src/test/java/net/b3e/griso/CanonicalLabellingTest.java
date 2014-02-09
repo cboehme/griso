@@ -30,7 +30,7 @@ import org.junit.Test;
 
 /**
  * Tests for class {@link GraphLabeller}.
- * 
+ *
  * @author Christoph Böhme
  *
  */
@@ -41,37 +41,37 @@ public final class CanonicalLabellingTest {
 	private static final String NAME3 = "L3";
 	private static final String NAME4 = "L4";
 	private static final String NAME5 = "L5";
-	
+
 	private Graph<String, String, String> graph;
-	
+
 	@Before
 	public void setup() {
 		graph = new Graph<>();
 	}
 
-	
+
 	@Test
 	public void shouldNotAnnounceLabellingIfGraphIsEmpty() {
-		
+
 		final GraphLabeller labeller = new GraphLabeller(graph);
 
 		assertFalse("No labelling variants expected", labeller.hasNext());
 	}
-	
+
 	@Test(expected=NoSuchElementException.class)
 	public void shouldFailIfNextIsCalledWhenThereAreNoMoreLabellings() {
 		graph.addVertex("1", NAME1);
 
 		final GraphLabeller labeller = new GraphLabeller(graph);
-		
+
 		assumeNotNull(labeller.next());
 		assumeFalse(labeller.hasNext());
 		labeller.next();
 	}
-	
+
 	@Test(expected=NoSuchElementException.class)
 	public void shouldFailIfGraphIsEmpty() {
-		
+
 		final GraphLabeller labeller = new GraphLabeller(graph);
 
 		assumeFalse(labeller.hasNext());
@@ -85,7 +85,7 @@ public final class CanonicalLabellingTest {
 		graph.addVertex("3", NAME3);
 		graph.addDirectedEdge("1", "2", NAME4);
 		graph.addDirectedEdge("1", "3", NAME5);
-		
+
 		final GraphLabeller labeller = new GraphLabeller(graph);
 
 		verifyLabellings(graph, labeller, 1);
@@ -98,12 +98,12 @@ public final class CanonicalLabellingTest {
 		graph.addVertex("3", NAME2);
 		graph.addDirectedEdge("1", "2", NAME3);
 		graph.addDirectedEdge("1", "3", NAME4);
-		
+
 		final GraphLabeller labeller = new GraphLabeller(graph);
 
 		verifyLabellings(graph, labeller, 1);
 	}
-	
+
 	@Test
 	public void shouldLabelGraphWithAmbiguousNodesWithDistinctNeighbourhood() {
 		graph.addVertex("1", NAME1);
@@ -115,7 +115,7 @@ public final class CanonicalLabellingTest {
 		graph.addDirectedEdge("1", "3", NAME5);
 		graph.addDirectedEdge("1", "4", NAME5);
 		graph.addDirectedEdge("2", "5", NAME5);
-		
+
 		final GraphLabeller labeller = new GraphLabeller(graph);
 
 		verifyLabellings(graph, labeller, 1);
@@ -131,12 +131,12 @@ public final class CanonicalLabellingTest {
 		graph.addDirectedEdge("2", "3", NAME3);
 		graph.addDirectedEdge("3", "1", NAME3);
 		graph.addDirectedEdge("1", "4",NAME3);
-		
+
 		final GraphLabeller labeller = new GraphLabeller(graph);
 
 		verifyLabellings(graph, labeller, 1);
 	}
-	
+
 	@Test
 	public void shouldLabelGraphWithNonResolvableAmbiguity() {
 		graph.addVertex("1", NAME1);
@@ -144,7 +144,7 @@ public final class CanonicalLabellingTest {
 		graph.addVertex("3", NAME2);
 		graph.addDirectedEdge("1", "2", NAME3);
 		graph.addDirectedEdge("1", "3", NAME3);
-		
+
 		final GraphLabeller labeller = new GraphLabeller(graph);
 
 		// NO CHECKSTYLE MagicNumber FOR 3 LINES:
@@ -152,7 +152,7 @@ public final class CanonicalLabellingTest {
 		// graph defined this test case.
 		verifyLabellings(graph, labeller, 4);
 	}
-	
+
 	@Test
 	public void shouldLabelGraphWithTwoNonResolvableAmbiguities() {
 		graph.addVertex("1", NAME1);
@@ -222,19 +222,19 @@ public final class CanonicalLabellingTest {
 
 	private static void verifyLabellings(final Graph<?, ?, ?> graph,
 			final GraphLabeller labeller, final int variants) {
-		
+
 		for (int i = 0; i < variants; ++i) {
 			assertTrue("Less labelling variants found than expected", labeller.hasNext());
 			verifyLabelling(graph, labeller.next());
 		}
 		assertFalse("More labelling variants found than expected", labeller.hasNext());
 	}
-	
+
 	private static void verifyLabelling(final Graph<?, ?, ?> graph,
 			final Map<Node<?>, Label> labelling) {
-		
+
 		final Set<Label> labels = new HashSet<>();
-		
+
 		for (final Node<?> node : graph.getNodes()) {
 			assertTrue("Node " + node.toString() + " has not been labelled",
 					labelling.containsKey(node));

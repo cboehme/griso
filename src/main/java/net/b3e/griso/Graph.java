@@ -26,7 +26,7 @@ import com.google.common.collect.BiMap;
 
 /**
  * A generic graph implementation.
- * 
+ *
  * @param <I> Type of vertex identifiers
  * @param <V> Type of vertex names
  * @param <E> Type of edge names
@@ -44,7 +44,7 @@ public final class Graph<I, V, E> {
 	 */
 	private final Map<I, Node<V>> vertices = new HashMap<>();
 	private final Set<Node<?>> nodes = new HashSet<>();
-	
+
 	public boolean hasVertex(final I vertexId) {
 		return vertices.containsKey(vertexId);
 	}
@@ -52,7 +52,7 @@ public final class Graph<I, V, E> {
 	public Set<Node<?>> getNodes() {
 		return Collections.unmodifiableSet(nodes);
 	}
-	
+
 	/**
 	 * Adds an unnamed vertex to the graph.
 	 *
@@ -75,15 +75,15 @@ public final class Graph<I, V, E> {
 			throw new IllegalArgumentException(
 					"A vertex with id '" + vertexId.toString() + "' exists already");
 		}
-		
+
 		final Node<V> node = new Node<>(Node.Type.VERTEX, vertexName, vertexId);
 		vertices.put(vertexId, node);
 		nodes.add(node);
 	}
-	
+
 	/**
 	 * Adds a directed edge to the graph.
-	 * 
+	 *
 	 * @param fromVertex identifier of the vertex where the edge starts from
 	 * @param toVertex identifier of the vertex at which the edge ends
 	 * @param edgeName of the edge
@@ -93,17 +93,17 @@ public final class Graph<I, V, E> {
 	public void addDirectedEdge(final I fromVertex, final I toVertex, final E edgeName) {
 		final Node<V> fromNode = getVertexNode(fromVertex);
 		final Node<V> toNode = getVertexNode(toVertex);
-		
+
 		final String nodeId = fromVertex.toString() + "->" + toVertex.toString();
 		final Node<E> edgeNode = new Node<>(Node.Type.EDGE, edgeName, nodeId);
 		nodes.add(edgeNode);
-		
+
 		fromNode.connect(edgeNode).connect(toNode);
 	}
-	
+
 	/**
 	 * Adds a directed unnamed edge to the graph.
-	 * 
+	 *
 	 * @param fromVertex identifier of the vertex where the edge starts from
 	 * @param toVertex identifier of the vertex at which the edge ends
 	 * @throws IllegalArgumentException if the {@code to} or
@@ -112,13 +112,13 @@ public final class Graph<I, V, E> {
 	public void addDirectedEdge(final I fromVertex, final I toVertex) {
 		final Node<V> fromNode = getVertexNode(fromVertex);
 		final Node<V> toNode = getVertexNode(toVertex);
-				
+
 		fromNode.connect(toNode);
 	}
 
 	/**
 	 * Adds an undirected edge to the graph.
-	 * 
+	 *
 	 * @param vertex1 identifier of the first end vertex of the edge
 	 * @param vertex2 identifier of the second end vertex of the edge
 	 * @param edgeName of the edge
@@ -128,18 +128,18 @@ public final class Graph<I, V, E> {
 	public void addUndirectedEdge(final I vertex1, final I vertex2, final E edgeName) {
 		final Node<V> node1 = getVertexNode(vertex1);
 		final Node<V> node2 = getVertexNode(vertex2);
-		
+
 		final String nodeId = vertex1.toString() + "--" + vertex2.toString();
 		final Node<E> edgeNode = new Node<>(Node.Type.EDGE, edgeName, nodeId);
 		nodes.add(edgeNode);
-		
+
 		node1.connect(edgeNode).connect(node2);
 		node2.connect(edgeNode).connect(node1);
 	}
-	
+
 	/**
 	 * Adds an undirected unnamed edge to the graph.
-	 * 
+	 *
 	 * @param vertex1 identifier of the first end vertex of the edge
 	 * @param vertex2 identifier of the second end vertex of the edge
 	 * @throws IllegalArgumentException if the {@code to} or
@@ -148,14 +148,14 @@ public final class Graph<I, V, E> {
 	public void addUndirectedEdge(final I vertex1, final I vertex2) {
 		final Node<V> node1 = getVertexNode(vertex1);
 		final Node<V> node2 = getVertexNode(vertex2);
-				
+
 		node1.connect(node2);
 		node2.connect(node1);
 	}
 
 	/**
 	 * Returns true if {@code otherGraph} is an isomorphism of this graph.
-	 * 
+	 *
 	 * @param otherGraph which may be an isomorphism of this one
 	 * @return true if otherGraph is an isomorphism
 	 */
@@ -169,11 +169,11 @@ public final class Graph<I, V, E> {
 		if (nodes.isEmpty() && otherGraph.getNodes().isEmpty()) {
 			return true;
 		}
-		
+
 		if (nodes.size() == otherGraph.getNodes().size()) {
 			final GraphLabeller thisLabeller = new GraphLabeller(this);
 			final GraphLabeller otherLabeller = new GraphLabeller(otherGraph);
-			
+
 			while (thisLabeller.hasNext()) {
 				final BiMap<Node<?>, Label> thisLabelling = thisLabeller.next();
 				while (otherLabeller.hasNext()) {
@@ -186,7 +186,7 @@ public final class Graph<I, V, E> {
 		}
 		return false;
 	}
-	
+
 	private Node<V> getVertexNode(final I vertexId) {
 		final Node<V> node = vertices.get(vertexId);
 		if (node == null) {
@@ -195,14 +195,14 @@ public final class Graph<I, V, E> {
 		}
 		return node;
 	}
-	
+
 	private static boolean compareLabellings(final BiMap<Node<?>, Label> thisLabelling,
 			final BiMap<Node<?>, Label> otherLabelling) {
-		
+
 		if (!thisLabelling.values().equals(otherLabelling.values())) {
 			return false;
 		}
-		
+
 		for (final Label thisLabel : thisLabelling.values()) {
 			final Node<?> thisNode = thisLabelling.inverse().get(thisLabel);
 			final Node<?> otherNode = otherLabelling.inverse().get(thisLabel);
@@ -210,7 +210,7 @@ public final class Graph<I, V, E> {
 			if (!thisNode.isEquivalent(otherNode)) {
 				return false;
 			}
-			
+
 			Set<Label> thisConnectedLabels = getLabels(thisNode.getConnectedTo(), thisLabelling);
 			Set<Label> otherConnectedLabels = getLabels(otherNode.getConnectedTo(), otherLabelling);
 			if (!thisConnectedLabels.equals(otherConnectedLabels)) {
@@ -223,18 +223,18 @@ public final class Graph<I, V, E> {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	private static Set<Label> getLabels(final Collection<Node<?>> nodes,
 			final BiMap<Node<?>, Label> labelling) {
-		
+
 		final Set<Label> labels = new HashSet<>();
 		for (final Node<?> node : nodes) {
 			labels.add(labelling.get(node));
 		}
-		
+
 		return labels;
 	}
 
