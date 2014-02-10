@@ -44,8 +44,7 @@ public final class GraphLabeller implements Iterator<Map<Node<?>, Label>> {
 	private static final int CONNECTION_TO = 31;
 	private static final int CONNECTION_FROM = 43;
 
-	private static final Node<?> REWIND_MARKER
-			= new Node<String>(Node.Type.VERTEX, "REWIND_MARKER");
+	private static final Node<?> REWIND_MARKER = new Node<String>("REWIND_MARKER");
 
 	private final Label.Factory labelFactory = new Label.Factory();
 

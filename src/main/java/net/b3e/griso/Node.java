@@ -28,28 +28,15 @@ import java.util.LinkedList;
  *
  * @author Christoph Böhme
  */
-final class Node<N> {
+class Node<N> {
 
-	private final Type type;
 	private final N name;
-	private final Object nodeId;
 
 	private final Collection<Node<?>> connectedTo = new LinkedList<>();
 	private final Collection<Node<?>> connectedFrom = new LinkedList<>();
 
-	/**
-	 * Type of node
-	 */
-	enum Type { VERTEX, EDGE };
-
-	public Node(final Type type, final N name) {
-		this(type, name, null);
-	}
-
-	public <I> Node(final Type type, final N name, final I nodeId) {
-		this.type = type;
+	public Node(final N name) {
 		this.name = name;
-		this.nodeId = nodeId;
 	}
 
 	public boolean hasName() {
@@ -60,10 +47,6 @@ final class Node<N> {
 		return name;
 	}
 
-	public Type getType() {
-		return type;
-	}
-
 	public Collection<Node<?>> getConnectedTo() {
 		return Collections.unmodifiableCollection(connectedTo);
 	}
@@ -72,8 +55,25 @@ final class Node<N> {
 		return Collections.unmodifiableCollection(connectedFrom);
 	}
 
+	/**
+	 * Checks whether two nodes are equivalent. Relations between
+	 * nodes are distinguished into <i>equality</i> and
+	 * <i>equivalence</i>. Two nodes are considered to be equal only
+	 * if they refer to the same instance. This can be checked for
+	 * using the {@code equals} method. The {@code isEquivalent}
+	 * method checks whether two nodes are equivalent meaning that
+	 * two nodes are logically corresponding.
+	 *
+	 * The reason for introducing an additional method for checking for
+	 * equivalence is that {@code GraphLabeller} has different
+	 * requirements on the equality of nodes than the {@code Graph}
+	 * class.
+	 *
+	 * @param other node to check for equivalence
+	 * @return true of {@code this} and {@code other} are equivalent.
+	 */
 	public boolean isEquivalent(final Node<?> other) {
-		if (type != other.type) {
+		if (this.getClass() != other.getClass()) {
 			return false;
 		}
 		if (name == null) {
@@ -94,27 +94,14 @@ final class Node<N> {
 		return toNode;
 	}
 
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		if (type == Type.VERTEX) {
-			builder.append('V');
-		} else {
-			builder.append('E');
-		}
-		builder.append(':');
-		if (nodeId == null) {
-			builder.append("__no_id");
-		} else {
-			builder.append(nodeId.toString());
-		}
-		builder.append('/');
-		if (name == null) {
-			builder.append("null");
-		} else {
-			builder.append(name.toString());
-		}
-		return builder.toString();
+	/**
+	 * Can be implemented by derived classes to control how edges
+	 * are shown in the Graph.toString output.
+	 *
+	 * @param builder to which the output is appended
+	 */
+	protected void printEdges(final StringBuilder builder) {
+		// Default implementation does nothing
 	}
 
 }

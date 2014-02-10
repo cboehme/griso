@@ -42,7 +42,7 @@ public final class Graph<I, V, E> {
 	 * nodes. These connections are not named. Named edges
 	 * are represented by nodes.
 	 */
-	private final Map<I, Node<V>> vertices = new HashMap<>();
+	private final Map<I, VertexNode<V>> vertices = new HashMap<>();
 	private final Set<Node<?>> nodes = new HashSet<>();
 
 	public boolean hasVertex(final I vertexId) {
@@ -76,7 +76,7 @@ public final class Graph<I, V, E> {
 					"A vertex with id '" + vertexId.toString() + "' exists already");
 		}
 
-		final Node<V> node = new Node<>(Node.Type.VERTEX, vertexName, vertexId);
+		final VertexNode<V> node = new VertexNode<>(vertexName, vertexId);
 		vertices.put(vertexId, node);
 		nodes.add(node);
 	}
@@ -94,8 +94,7 @@ public final class Graph<I, V, E> {
 		final Node<V> fromNode = getVertexNode(fromVertex);
 		final Node<V> toNode = getVertexNode(toVertex);
 
-		final String nodeId = fromVertex.toString() + "->" + toVertex.toString();
-		final Node<E> edgeNode = new Node<>(Node.Type.EDGE, edgeName, nodeId);
+		final Node<E> edgeNode = new EdgeNode<>(edgeName);
 		nodes.add(edgeNode);
 
 		fromNode.connect(edgeNode).connect(toNode);
@@ -129,8 +128,7 @@ public final class Graph<I, V, E> {
 		final Node<V> node1 = getVertexNode(vertex1);
 		final Node<V> node2 = getVertexNode(vertex2);
 
-		final String nodeId = vertex1.toString() + "--" + vertex2.toString();
-		final Node<E> edgeNode = new Node<>(Node.Type.EDGE, edgeName, nodeId);
+		final Node<E> edgeNode = new EdgeNode<>(edgeName);
 		nodes.add(edgeNode);
 
 		node1.connect(edgeNode).connect(node2);
@@ -194,6 +192,15 @@ public final class Graph<I, V, E> {
 					"No vertex with id '" + vertexId.toString() + "' exists");
 		}
 		return node;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		for (final VertexNode<?> node : vertices.values()) {
+			node.printConnections(builder);
+		}
+		return builder.toString();
 	}
 
 	private static boolean compareLabellings(final BiMap<Node<?>, Label> thisLabelling,
